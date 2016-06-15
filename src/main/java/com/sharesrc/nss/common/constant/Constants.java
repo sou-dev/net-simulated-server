@@ -132,7 +132,7 @@ public class Constants {
 
     public static class Text {
         public static final String APP_NAME = "NET Simulate Server";
-        public static final String APP_VERSION = "v1.1";
+        public static final String APP_VERSION = "v1.0";
         public static final String APP_RELEASE = "r130225";
         public static final String APP_DESCRIPTION = "© 2013 sou";
         public static final String MENU_APPLICATION = "Application";
