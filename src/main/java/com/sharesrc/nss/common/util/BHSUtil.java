@@ -1,11 +1,17 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.common.util;
 
+/**
+ * The utility for handling bytes & hex data.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class BHSUtil {
+
     public BHSUtil() {
     }
 

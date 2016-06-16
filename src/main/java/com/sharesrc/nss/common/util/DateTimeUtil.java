@@ -1,14 +1,20 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.common.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * The Datetime utility.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class DateTimeUtil {
+
     static final String DATE_TIME_DEFAULT_FORMAT = "yyyy-MM-dd HH:mm:ss";
     static final String LOG_FOLDER_NAME_FORMAT = "yyyyMMdd_HHmmss";
 

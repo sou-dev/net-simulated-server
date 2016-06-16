@@ -1,11 +1,17 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.model;
 
+/**
+ * The model for HTTP Content
+ *
+ * @author sou
+ * @since 2013
+ */
 public class Content {
+
     String hex = "";
     String ascii = "";
     String decompress = "";

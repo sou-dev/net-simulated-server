@@ -1,9 +1,10 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.common.util;
+
+import com.sharesrc.nss.common.constant.Constants.Logging;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,13 +14,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * The utility for logging.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class LogUtil {
+
     private static LogUtil instance = null;
     private final HashMap<String, Logger> mapLogger = new HashMap();
     String logFolder = null;
 
     private LogUtil() {
-        this.logFolder = PropUtil.getSeparateLogFolder() ? "./log" + File.separator + DateTimeUtil.getTimeNow4LogFolderName() : "./log";
+        this.logFolder = PropUtil.getSeparateLogFolder() ? Logging.LOG_DIR + File.separator + DateTimeUtil.getTimeNow4LogFolderName() : Logging.LOG_DIR;
     }
 
     public static synchronized LogUtil getInstance() {
@@ -39,7 +47,7 @@ public class LogUtil {
                     f.mkdirs();
                 }
 
-                FileHandler handler = new FileHandler(this.logFolder + File.separator + loggerName.substring(loggerName.lastIndexOf(".") + 1) + ".log", true);
+                FileHandler handler = new FileHandler(this.logFolder + File.separator + loggerName.substring(loggerName.lastIndexOf(".") + 1) + Logging.LOG_FILE_EXT, true);
                 handler.setFormatter(new SimpleFormatter());
                 e.setLevel(PropUtil.getLogAll() ? Level.ALL : Level.WARNING);
                 e.addHandler(handler);
@@ -51,6 +59,6 @@ public class LogUtil {
             System.out.println("(IOException) Setup logging failed!!!");
         }
 
-        return (Logger) this.mapLogger.get(loggerName);
+        return this.mapLogger.get(loggerName);
     }
 }

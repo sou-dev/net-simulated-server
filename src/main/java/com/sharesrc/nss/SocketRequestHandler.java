@@ -1,7 +1,6 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss;
 
@@ -17,15 +16,23 @@ import java.net.Socket;
 import java.util.Arrays;
 import java.util.logging.Logger;
 
+/**
+ * The Socket Request Handler.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class SocketRequestHandler extends Thread {
+
     static final Logger LOGGER = LogUtil.getInstance().getLogger(SocketRequestHandler.class.getName());
-    NETSimulateServer nss;
+
+    NETSimulatedServer nss;
     Socket socket = null;
     InputStream in = null;
     OutputStream out = null;
     long time = 0L;
 
-    public SocketRequestHandler(NETSimulateServer nss, Socket socket) {
+    public SocketRequestHandler(NETSimulatedServer nss, Socket socket) {
         if (nss != null && socket != null) {
             this.nss = nss;
             this.socket = socket;
@@ -50,7 +57,7 @@ public class SocketRequestHandler extends Thread {
 
         while (this.nss.isStarted()) {
             byte[] buffer = new byte[maxBytesBufferLength];
-            byte[] receivedMsg = (byte[]) null;
+            byte[] receivedMsg = null;
             boolean totalNumberOfBytes = true;
 
             try {
@@ -69,7 +76,7 @@ public class SocketRequestHandler extends Thread {
 
                 if (totalNumberOfBytes1 == -1) {
                     this.time = System.currentTimeMillis() - this.time;
-                    System.out.println("The end of the stream has been reached! End connection: " + this.socket.getRemoteSocketAddress().toString() + " (livetime=" + String.format("%.2f", new Object[]{Float.valueOf((float) (this.time / 1000L))}) + "s)");
+                    System.out.println("The end of the stream has been reached! End connection: " + this.socket.getRemoteSocketAddress().toString() + " (livetime=" + String.format("%.2f", Float.valueOf((float) (this.time / 1000L))) + "s)");
                     return;
                 }
             } catch (IOException e) {

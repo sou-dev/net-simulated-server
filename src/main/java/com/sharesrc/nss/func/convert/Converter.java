@@ -1,10 +1,10 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.func.convert;
 
+import com.sharesrc.nss.common.constant.Constants;
 import com.sharesrc.nss.common.constant.Constants.Fonts;
 import com.sharesrc.nss.common.constant.Constants.Img;
 import com.sharesrc.nss.common.util.GZipUtil;
@@ -14,31 +14,41 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * The Converter UI.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class Converter extends JDialog {
+
     private static final long serialVersionUID = 9077685308507661381L;
+
     private static final String ACTION_COMMAND_ENC = "action_command_enc";
     private static final String ACTION_COMMAND_DEC = "action_command_dec";
+
     final Converter.EventHandler listener = new Converter.EventHandler();
+
     JTextArea taEncStr;
     JTextArea taDecStr;
 
     public Converter(Frame owner) {
-        super(owner, "Converter", false);
+        super(owner, Constants.Text.CONVERTER_DIALOG_TITLE, false);
         this.init();
     }
 
     private Component createMainPnl() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
-        JButton btnEnc = new JButton("Encode");
+        JButton btnEnc = new JButton(Constants.Text.BUTTON_ENCODE);
         btnEnc.setFont(Fonts.BTN_ENC_DEC);
         btnEnc.setIcon(Img.ENC_ICON);
-        btnEnc.setActionCommand("action_command_enc");
+        btnEnc.setActionCommand(ACTION_COMMAND_ENC);
         btnEnc.addActionListener(this.listener);
-        JButton btnDec = new JButton("Decode");
+        JButton btnDec = new JButton(Constants.Text.BUTTON_DECODE);
         btnDec.setFont(Fonts.BTN_ENC_DEC);
         btnDec.setIcon(Img.DEC_ICON);
-        btnDec.setActionCommand("action_command_dec");
+        btnDec.setActionCommand(ACTION_COMMAND_DEC);
         btnDec.addActionListener(this.listener);
         this.taEncStr = new JTextArea(4, 14);
         this.taEncStr.setLineWrap(true);
@@ -91,15 +101,16 @@ public class Converter extends JDialog {
     }
 
     class EventHandler implements ActionListener {
+
         EventHandler() {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().equals("action_command_enc")) {
+            if (ACTION_COMMAND_ENC.equals(e.getActionCommand())) {
                 Converter.this.enc();
             }
 
-            if (e.getActionCommand().equals("action_command_dec")) {
+            if (ACTION_COMMAND_DEC.equals(e.getActionCommand())) {
                 Converter.this.dec();
             }
 

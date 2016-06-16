@@ -1,7 +1,6 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.func.xmleditor;
 
@@ -16,8 +15,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 
+/**
+ * The XML TextPane.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class XmlTextPane extends JScrollPane {
+
     private static final long serialVersionUID = 765914301979449315L;
+
     JEditorPane editor = new JEditorPane();
     XMLEditorKit kit = new XMLEditorKit();
 

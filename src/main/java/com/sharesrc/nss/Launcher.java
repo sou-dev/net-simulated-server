@@ -1,7 +1,6 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss;
 
@@ -11,7 +10,14 @@ import com.sharesrc.nss.common.util.PropUtil;
 import javax.swing.*;
 import java.util.logging.Logger;
 
+/**
+ * The launcher to run desktop application.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class Launcher {
+
     public Launcher() {
     }
 
@@ -27,7 +33,7 @@ public class Launcher {
 
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                new NETSimulateServer();
+                new NETSimulatedServer();
             }
         });
     }

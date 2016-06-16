@@ -1,46 +1,37 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.common.constant;
 
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * All constants for application.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class Constants {
+
     public Constants() {
     }
 
     public static class Colour {
         public static final Color XML_EDITOR_TF_FILE_PATH_FG = new Color(0, 0, 96);
-        public static final Color XML_EDITOR_TF_FILE_PATH_BG;
-        public static final Color ELEMENT_NAME;
-        public static final Color ELEMENT_VALUE;
-        public static final Color ATTRIBUTE_NAME;
-        public static final Color ATTRIBUTE_VALUE;
-        public static final Color COMMENT;
-        public static final Color CDATA;
-        public static final Color TF_STATUS_READY;
-        public static final Color TF_STATUS_STARTED;
-        public static final Color TF_STATUS_STOPPED;
-        public static final Color TP_CONSOLE_FG;
-        public static final Color TP_CONSOLE_BG;
-
-        static {
-            XML_EDITOR_TF_FILE_PATH_BG = Color.YELLOW;
-            ELEMENT_NAME = new Color(44, 179, 32);
-            ELEMENT_VALUE = Color.BLACK;
-            ATTRIBUTE_NAME = new Color(179, 32, 115);
-            ATTRIBUTE_VALUE = Color.BLUE;
-            COMMENT = Color.DARK_GRAY;
-            CDATA = Color.ORANGE;
-            TF_STATUS_READY = Color.ORANGE;
-            TF_STATUS_STARTED = Color.GREEN;
-            TF_STATUS_STOPPED = Color.RED;
-            TP_CONSOLE_FG = Color.LIGHT_GRAY;
-            TP_CONSOLE_BG = Color.BLACK;
-        }
+        public static final Color XML_EDITOR_TF_FILE_PATH_BG = Color.YELLOW;
+        public static final Color ELEMENT_NAME = new Color(44, 179, 32);
+        public static final Color ELEMENT_VALUE = Color.BLACK;
+        public static final Color ATTRIBUTE_NAME = new Color(179, 32, 115);
+        public static final Color ATTRIBUTE_VALUE = Color.BLUE;
+        public static final Color COMMENT = Color.DARK_GRAY;
+        public static final Color CDATA = Color.ORANGE;
+        public static final Color TF_STATUS_READY = Color.ORANGE;
+        public static final Color TF_STATUS_STARTED = Color.GREEN;
+        public static final Color TF_STATUS_STOPPED = Color.RED;
+        public static final Color TP_CONSOLE_FG = Color.LIGHT_GRAY;
+        public static final Color TP_CONSOLE_BG = Color.BLACK;
 
         public Colour() {
         }
@@ -48,18 +39,25 @@ public class Constants {
 
     public static class Config {
         public static final String[] CONFIG_FILE_PATH = new String[]{"cfg.properties", "/cfg.properties", "./cfg.properties"};
+
         public static final String CFG_DEFAULT_PORT = "DEFAULT_PORT";
         public static final String DEFAULT_PORT = "21288";
+
         public static final String CFG_QUEUE_OF_CONNECTIONS = "QUEUE_OF_CONNECTIONS";
-        public static final String QUEUE_OF_CONNECTIONS = "10";
+        public static final String DEFAULT_QUEUE_OF_CONNECTIONS = "10";
+
         public static final String CFG_SERVER_SOCKET_TIMEOUT = "SERVER_SOCKET_TIMEOUT";
-        public static final String SERVER_SOCKET_TIMEOUT = "21288";
+        public static final String DEFAULT_SERVER_SOCKET_TIMEOUT = "21288";
+
         public static final String CFG_MAX_BYTES_BUFFER_LENGTH = "MAX_BYTES_BUFFER_LENGTH";
-        public static final String MAX_BYTES_BUFFER_LENGTH = "1024";
+        public static final String DEFAULT_MAX_BYTES_BUFFER_LENGTH = "1024";
+
         public static final String CFG_LOG_ALL = "LOG_ALL";
         public static final String DEFAULT_LOG_ALL = "false";
+
         public static final String CFG_SEPARATE_LOG_FOLDER = "SEPARATE_LOG_FOLDER";
-        public static final String SEPARATE_LOG_FOLDER = "false";
+        public static final String DEFAULT_SEPARATE_LOG_FOLDER = "false";
+
         public static final String CFG_DEFAULT_DOCUMENT = "DEFAULT_DOCUMENT";
         public static final String DEFAULT_DOCUMENT = "index.htm";
 
@@ -131,7 +129,7 @@ public class Constants {
     }
 
     public static class Text {
-        public static final String APP_NAME = "NET Simulate Server";
+        public static final String APP_NAME = "NET Simulated Server";
         public static final String APP_VERSION = "v1.0";
         public static final String APP_RELEASE = "r130225";
         public static final String APP_DESCRIPTION = "© 2013 sou";

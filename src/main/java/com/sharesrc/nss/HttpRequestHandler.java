@@ -1,10 +1,10 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss;
 
+import com.sharesrc.nss.common.constant.Constants;
 import com.sharesrc.nss.common.util.*;
 import com.sharesrc.nss.model.Messages;
 import com.sun.net.httpserver.Headers;
@@ -22,13 +22,21 @@ import java.io.*;
 import java.util.*;
 import java.util.logging.Logger;
 
+/**
+ * The HTTP Request Handler.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class HttpRequestHandler implements HttpHandler {
+
     static final Logger LOGGER = LogUtil.getInstance().getLogger(HttpRequestHandler.class.getName());
-    NETSimulateServer server = null;
+
+    NETSimulatedServer server = null;
     HttpExchange he = null;
     Messages messages = null;
 
-    public HttpRequestHandler(NETSimulateServer server) {
+    public HttpRequestHandler(NETSimulatedServer server) {
         this.server = server;
     }
 
@@ -86,20 +94,20 @@ public class HttpRequestHandler implements HttpHandler {
     private void processRequest() {
         this.messages = new Messages();
         StringBuffer sb = new StringBuffer();
-        sb.append("\n" + this.genElement("Messages"));
-        sb.append("\n\t" + this.genElement("Recv"));
+        sb.append("\n" + this.genElement(Constants.Http.TAG_MESSAGES));
+        sb.append("\n\t" + this.genElement(Constants.Http.TAG_RECV));
         this.messages.getRecv().setMethod(this.he.getRequestMethod());
-        sb.append("\n\t\t" + this.genElement("Method", this.he.getRequestMethod()));
+        sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_METHOD, this.he.getRequestMethod()));
         this.messages.getRecv().setContextPath(this.he.getHttpContext().getPath());
-        sb.append("\n\t\t" + this.genElement("Context-path", this.he.getHttpContext().getPath()));
+        sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_CONTEXT_PATH, this.he.getHttpContext().getPath()));
         if (this.he.getRequestURI().getQuery() != null) {
             this.messages.getRecv().setQuerry(this.he.getRequestURI().getQuery());
-            sb.append("\n\t\t" + this.genElement("Querry", this.he.getRequestURI().getQuery()));
+            sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_QUERRY, this.he.getRequestURI().getQuery()));
         }
 
         this.messages.getRecv().setProtocol(this.he.getProtocol());
-        sb.append("\n\t\t" + this.genElement("Protocol", this.he.getProtocol()));
-        sb.append("\n\t\t" + this.genElement("Headers"));
+        sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_PROTOCOL, this.he.getProtocol()));
+        sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_HEADERS));
         Headers headers = this.he.getRequestHeaders();
         Iterator a = headers.keySet().iterator();
 
@@ -110,7 +118,7 @@ public class HttpRequestHandler implements HttpHandler {
             sb.append("\n\t\t\t" + this.genElement(is, headers.get(is)));
         }
 
-        sb.append("\n\t\t" + this.genElement("Headers", true));
+        sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_HEADERS, true));
         InputStream is1 = this.he.getRequestBody();
         boolean a1 = false;
         int maxBytesBufferLength = PropUtil.getMaxBytesBufferLength();
@@ -120,7 +128,7 @@ public class HttpRequestHandler implements HttpHandler {
         }
 
         byte[] buffer = new byte[maxBytesBufferLength];
-        byte[] receivedMsg = (byte[]) null;
+        byte[] receivedMsg = null;
 
         try {
             int a2;
@@ -139,7 +147,6 @@ public class HttpRequestHandler implements HttpHandler {
 
                 is = null;
             } catch (IOException ex) {
-                ;
             }
 
         }
@@ -149,23 +156,23 @@ public class HttpRequestHandler implements HttpHandler {
             time = BHSUtil.bytesToHex(receivedMsg);
             String ascii = BHSUtil.convertHexToString(BHSUtil.bytesToHex(receivedMsg));
             String decompress = GZipUtil.decompress(BHSUtil.bytesToHex(receivedMsg));
-            sb.append("\n\t\t" + this.genElement("Content"));
+            sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_CONTENT));
             this.messages.getRecv().getContent().setHex(time);
-            sb.append("\n\t\t\t" + this.genElement("Hex", time));
+            sb.append("\n\t\t\t" + this.genElement(Constants.Http.TAG_HEX, time));
             this.messages.getRecv().getContent().setAscii(ascii);
-            sb.append("\n\t\t\t" + this.genElement("Ascii", ascii));
+            sb.append("\n\t\t\t" + this.genElement(Constants.Http.TAG_ASCII, ascii));
             if (decompress.length() > 0) {
                 this.messages.getRecv().getContent().setDecompress(decompress);
-                sb.append("\n\t\t\t" + this.genElement("Decompress", decompress));
+                sb.append("\n\t\t\t" + this.genElement(Constants.Http.TAG_DECOMPRESS, decompress));
             }
 
-            sb.append("\n\t\t" + this.genElement("Content", true));
+            sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_CONTENT, true));
         }
 
-        sb.append("\n\t" + this.genElement("Recv", true));
-        sb.append("\n\t" + this.genElement("Send"));
-        sb.append("\n\t" + this.genElement("Send", true));
-        sb.append("\n" + this.genElement("Messages", true));
+        sb.append("\n\t" + this.genElement(Constants.Http.TAG_RECV, true));
+        sb.append("\n\t" + this.genElement(Constants.Http.TAG_SEND));
+        sb.append("\n\t" + this.genElement(Constants.Http.TAG_SEND, true));
+        sb.append("\n" + this.genElement(Constants.Http.TAG_MESSAGES, true));
         time = DateTimeUtil.getTimeNow();
         this.messages.setDetails(sb.toString());
         this.server.addMessages(this.messages);
@@ -187,7 +194,7 @@ public class HttpRequestHandler implements HttpHandler {
                 return;
             }
 
-            File correspondingFile = new File((String) this.server.hmapAllPages.get(fPath));
+            File correspondingFile = new File(this.server.hmapAllPages.get(fPath));
             FileInputStream inputStream = new FileInputStream(correspondingFile);
             InputStreamReader reader = new InputStreamReader(inputStream, "UTF-8");
             InputSource is = new InputSource(reader);
@@ -201,7 +208,7 @@ public class HttpRequestHandler implements HttpHandler {
 
             while (responseContentBytes.hasNext()) {
                 String statusCode = (String) responseContentBytes.next();
-                headers.set(statusCode, (String) m.getSend().getHeaders().get(statusCode));
+                headers.set(statusCode, m.getSend().getHeaders().get(statusCode));
             }
 
             int statusCode1 = 200;
@@ -246,7 +253,7 @@ public class HttpRequestHandler implements HttpHandler {
 
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
             this.elementStack.push(qName);
-            if (qName.equalsIgnoreCase("Messages")) {
+            if (qName.equalsIgnoreCase(Constants.Http.TAG_MESSAGES)) {
                 Messages messages = new Messages();
                 this.all.add(messages);
                 this.objectStack.push(messages);
@@ -256,7 +263,7 @@ public class HttpRequestHandler implements HttpHandler {
 
         public void endElement(String uri, String localName, String qName) throws SAXException {
             this.elementStack.pop();
-            if (qName.equalsIgnoreCase("Messages")) {
+            if (qName.equalsIgnoreCase(Constants.Http.TAG_MESSAGES)) {
                 this.objectStack.pop();
             }
 
@@ -267,50 +274,50 @@ public class HttpRequestHandler implements HttpHandler {
             if (value.length() != 0) {
                 if (this.objectStack.size() != 0 && this.objectStack.peek() instanceof Messages) {
                     Messages messages = (Messages) this.objectStack.peek();
-                    if (this.currentElementParent().equalsIgnoreCase("Recv") || this.currentElementGrandParent().equalsIgnoreCase("Recv")) {
-                        if (this.currentElement().equalsIgnoreCase("Method")) {
+                    if (this.currentElementParent().equalsIgnoreCase(Constants.Http.TAG_RECV) || this.currentElementGrandParent().equalsIgnoreCase(Constants.Http.TAG_RECV)) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_METHOD)) {
                             messages.getRecv().setMethod(value);
                         }
 
-                        if (this.currentElement().equalsIgnoreCase("Context-path")) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_CONTEXT_PATH)) {
                             messages.getRecv().setContextPath(value);
                         }
 
-                        if (this.currentElement().equalsIgnoreCase("Querry")) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_QUERRY)) {
                             messages.getRecv().setQuerry(value);
                         }
 
-                        if (this.currentElement().equalsIgnoreCase("Protocol")) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_PROTOCOL)) {
                             messages.getRecv().setProtocol(value);
                         }
 
-                        if (this.currentElementParent().equalsIgnoreCase("Headers")) {
+                        if (this.currentElementParent().equalsIgnoreCase(Constants.Http.TAG_HEADERS)) {
                             messages.getRecv().getHeaders().put(this.currentElement(), value);
                         }
 
-                        if (this.currentElement().equalsIgnoreCase("Hex")) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_HEX)) {
                             messages.getRecv().getContent().setHex(value);
                         }
 
-                        if (this.currentElement().equalsIgnoreCase("Ascii")) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_ASCII)) {
                             messages.getRecv().getContent().setAscii(value);
                         }
 
-                        if (this.currentElement().equalsIgnoreCase("Decompress")) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_DECOMPRESS)) {
                             messages.getRecv().getContent().setDecompress(value);
                         }
                     }
 
-                    if (this.currentElementParent().equalsIgnoreCase("Send") || this.currentElementGrandParent().equalsIgnoreCase("Send")) {
-                        if (this.currentElement().equalsIgnoreCase("Status-code")) {
+                    if (this.currentElementParent().equalsIgnoreCase(Constants.Http.TAG_SEND) || this.currentElementGrandParent().equalsIgnoreCase(Constants.Http.TAG_SEND)) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_STATUS_CODE)) {
                             messages.getSend().setStatusCode(value);
                         }
 
-                        if (this.currentElementParent().equalsIgnoreCase("Headers")) {
+                        if (this.currentElementParent().equalsIgnoreCase(Constants.Http.TAG_HEADERS)) {
                             messages.getSend().getHeaders().put(this.currentElement(), value);
                         }
 
-                        if (this.currentElement().equalsIgnoreCase("Hex")) {
+                        if (this.currentElement().equalsIgnoreCase(Constants.Http.TAG_HEX)) {
                             messages.getSend().getContent().setHex(value);
                         }
                     }
@@ -320,7 +327,7 @@ public class HttpRequestHandler implements HttpHandler {
         }
 
         private String currentElement() {
-            return (String) this.elementStack.peek();
+            return this.elementStack.peek();
         }
 
         private String currentElementParent() {
@@ -332,7 +339,7 @@ public class HttpRequestHandler implements HttpHandler {
         }
 
         private String levelUpCurrentElement(int level) {
-            return this.elementStack.size() < level ? "" : (String) this.elementStack.get(this.elementStack.size() - level);
+            return this.elementStack.size() < level ? "" : this.elementStack.get(this.elementStack.size() - level);
         }
     }
 }

@@ -1,7 +1,6 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.common.util;
 
@@ -9,7 +8,14 @@ import java.io.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
+/**
+ * The GZip utility.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class GZipUtil {
+
     public GZipUtil() {
     }
 
@@ -40,7 +46,6 @@ public class GZipUtil {
 
                     gzos = null;
                 } catch (IOException ex) {
-                    ;
                 }
 
             }
@@ -90,7 +95,6 @@ public class GZipUtil {
 
                     in = null;
                 } catch (IOException ex) {
-                    ;
                 }
 
             }

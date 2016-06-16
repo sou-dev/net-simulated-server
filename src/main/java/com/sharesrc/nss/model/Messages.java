@@ -1,11 +1,17 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.model;
 
+/**
+ * The model for exchanging messages
+ *
+ * @author sou
+ * @since 2013
+ */
 public class Messages {
+
     Recv recv = new Recv();
     Send send = new Send();
     String details = "";

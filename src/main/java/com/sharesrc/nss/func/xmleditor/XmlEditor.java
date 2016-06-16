@@ -1,10 +1,10 @@
-//
-// Source code recreated from a .class file by IntelliJ IDEA
-// (powered by Fernflower decompiler)
-//
+/*
+ * Copyright (c) Sharesrc 2016.
+ */
 
 package com.sharesrc.nss.func.xmleditor;
 
+import com.sharesrc.nss.common.constant.Constants;
 import com.sharesrc.nss.common.constant.Constants.Colour;
 import com.sharesrc.nss.common.constant.Constants.Fonts;
 import com.sharesrc.nss.common.constant.Constants.Img;
@@ -17,15 +17,22 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.util.logging.Logger;
 
+/**
+ * The XML Editor UI.
+ *
+ * @author sou
+ * @since 2013
+ */
 public class XmlEditor extends JDialog {
+
     static final Logger LOGGER = LogUtil.getInstance().getLogger(XmlEditor.class.getName());
     private static final long serialVersionUID = 7165565729973253218L;
     private static final String ACTION_COMMAND_SAVE = "action_command_save";
     final XmlEditor.EventHandler listener = new XmlEditor.EventHandler();
-    XmlTextPane xmlTextPane;
     boolean editMode = false;
     String filePath = null;
     String data = null;
+    XmlTextPane xmlTextPane;
 
     public XmlEditor(Frame owner, String title, String data) {
         super(owner, title, true);
@@ -55,7 +62,7 @@ public class XmlEditor extends JDialog {
         panel.setBorder(BorderFactory.createRaisedBevelBorder());
         JButton btnSave = new JButton(Img.SAVE_ICON);
         btnSave.setPreferredSize(new Dimension(22, 22));
-        btnSave.setActionCommand("action_command_save");
+        btnSave.setActionCommand(ACTION_COMMAND_SAVE);
         btnSave.addActionListener(this.listener);
         JButton btnClose = new JButton(Img.CLOSE_ICON);
         btnClose.setPreferredSize(new Dimension(22, 22));
@@ -71,7 +78,7 @@ public class XmlEditor extends JDialog {
         panel.add(btnSave);
         panel.add(btnClose);
         panel.add(Box.createHorizontalStrut(15));
-        panel.add(new JLabel("Path"));
+        panel.add(new JLabel(Constants.Text.LABEL_PATH));
         panel.add(tfFilePath);
         return panel;
     }
@@ -101,11 +108,11 @@ public class XmlEditor extends JDialog {
                 }
 
                 if (e.toString().trim().length() == 0) {
-                    e.append("<All>\n\n");
-                    e.append("</All>");
+                    e.append("<" + Constants.Http.TAG_ALL + ">\n\n");
+                    e.append("</" + Constants.Http.TAG_ALL + ">");
                 }
 
-                int backOffset = "All".length() + 4;
+                int backOffset = Constants.Http.TAG_ALL.length() + 4;
                 e.insert(e.toString().trim().length() - backOffset, "\n<!-- Uncomment for making response \n" + this.data + "\n-->\n");
                 this.xmlTextPane.append(e.toString());
             } catch (FileNotFoundException ex) {
@@ -171,11 +178,12 @@ public class XmlEditor extends JDialog {
     }
 
     class EventHandler implements ActionListener {
+
         EventHandler() {
         }
 
         public void actionPerformed(ActionEvent e) {
-            if (e.getActionCommand().equals("action_command_save")) {
+            if (ACTION_COMMAND_SAVE.equals(e.getActionCommand())) {
                 XmlEditor.this.save();
             }
 
