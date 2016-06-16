@@ -5,10 +5,12 @@
 
 package com.sharesrc.nss;
 
+import com.sharesrc.nss.common.constant.Constants;
 import com.sharesrc.nss.common.constant.Constants.Colour;
 import com.sharesrc.nss.common.constant.Constants.Data;
 import com.sharesrc.nss.common.constant.Constants.Fonts;
 import com.sharesrc.nss.common.constant.Constants.Img;
+import com.sharesrc.nss.common.constant.Constants.Text;
 import com.sharesrc.nss.common.util.LogUtil;
 import com.sharesrc.nss.common.util.PropUtil;
 import com.sharesrc.nss.func.convert.Converter;
@@ -278,7 +280,7 @@ public class NETSimulateServer extends JFrame {
         this.setJMenuBar((JMenuBar) this.createMenuBar());
         this.getContentPane().add(this.createMainPnl(), "Center");
         this.setDefaultCloseOperation(3);
-        this.setTitle("NET Simulate Server v1.1");
+        this.setTitle(Text.APP_NAME + " " + Text.APP_VERSION);
         this.setIconImage(Img.APP_ICON);
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize().width * 2 / 3, Toolkit.getDefaultToolkit().getScreenSize().height * 2 / 3);
         this.setLocationRelativeTo((Component) null);
@@ -585,7 +587,7 @@ public class NETSimulateServer extends JFrame {
             }
 
             if (e.getActionCommand().equals("action_command_about")) {
-                JOptionPane.showMessageDialog(NETSimulateServer.this, "NET Simulate Server\nv1.1 [r130225]\n© 2013 sou", "About", 1, new ImageIcon(Img.APP_ICON));
+                JOptionPane.showMessageDialog(NETSimulateServer.this, Text.APP_NAME + "\n" + Text.APP_VERSION + " [" + Text.APP_RELEASE +"]\n" + Text.APP_DESCRIPTION, "About", 1, new ImageIcon(Img.APP_ICON));
             }
 
             if (e.getActionCommand().equals("action_command_make_response")) {
