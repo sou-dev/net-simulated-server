@@ -4,6 +4,7 @@
 
 package com.sharesrc.nss;
 
+import com.sharesrc.nss.common.constant.Constants;
 import com.sharesrc.nss.common.util.DateTimeUtil;
 import com.sharesrc.nss.common.util.LogUtil;
 import com.sharesrc.nss.common.util.PropUtil;
@@ -58,23 +59,22 @@ public class SocketRequestHandler extends Thread {
         while (this.nss.isStarted()) {
             byte[] buffer = new byte[maxBytesBufferLength];
             byte[] receivedMsg = null;
-            boolean totalNumberOfBytes = true;
 
             try {
-                int totalNumberOfBytes1;
-                while ((totalNumberOfBytes1 = this.in.read(buffer)) >= 0) {
-                    receivedMsg = Arrays.copyOfRange(buffer, 0, totalNumberOfBytes1);
+                int totalNumberOfBytes;
+                while ((totalNumberOfBytes = this.in.read(buffer)) >= 0) {
+                    receivedMsg = Arrays.copyOfRange(buffer, 0, totalNumberOfBytes);
                     if (receivedMsg.length != 0 && receivedMsg != null) {
-                        String e = new String(receivedMsg);
+                        String msg = new String(receivedMsg);
                         Messages messages = new Messages();
-                        messages.setDetails(e);
+                        messages.setDetails(msg);
                         String time = DateTimeUtil.getTimeNow();
                         this.nss.addMessages(messages);
-                        this.nss.updateTableExchanges(new Object[]{time, "Recv", "", Integer.valueOf(receivedMsg.length), e});
+                        this.nss.updateTableExchanges(new Object[]{time, Constants.Http.TAG_RECV, "", Integer.valueOf(receivedMsg.length), msg});
                     }
                 }
 
-                if (totalNumberOfBytes1 == -1) {
+                if (totalNumberOfBytes == -1) {
                     this.time = System.currentTimeMillis() - this.time;
                     System.out.println("The end of the stream has been reached! End connection: " + this.socket.getRemoteSocketAddress().toString() + " (livetime=" + String.format("%.2f", Float.valueOf((float) (this.time / 1000L))) + "s)");
                     return;

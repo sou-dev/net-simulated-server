@@ -58,7 +58,8 @@ public class XmlEditor extends JDialog {
 
     private Component createToolsBarPnl() {
         JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(0, 2, 2));
+
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 2, 2));
         panel.setBorder(BorderFactory.createRaisedBevelBorder());
         JButton btnSave = new JButton(Img.SAVE_ICON);
         btnSave.setPreferredSize(new Dimension(22, 22));
@@ -80,11 +81,13 @@ public class XmlEditor extends JDialog {
         panel.add(Box.createHorizontalStrut(15));
         panel.add(new JLabel(Constants.Text.LABEL_PATH));
         panel.add(tfFilePath);
+
         return panel;
     }
 
     private Component createEditorPnl() {
         this.xmlTextPane = new XmlTextPane();
+
         this.xmlTextPane.getEditor().setFont(Fonts.XMLEDITOR_DEFAULT);
         this.xmlTextPane.getEditor().setEditable(this.isEditMode());
         if (!this.isEditMode()) {
@@ -93,7 +96,7 @@ public class XmlEditor extends JDialog {
             BufferedReader in = null;
 
             try {
-                StringBuffer e = new StringBuffer();
+                StringBuffer sb = new StringBuffer();
                 File f = new File(this.filePath);
                 if (!f.exists()) {
                     f.getParentFile().mkdirs();
@@ -104,17 +107,17 @@ public class XmlEditor extends JDialog {
                 String str = null;
 
                 while ((str = in.readLine()) != null) {
-                    e.append(str + "\n");
+                    sb.append(str + "\n");
                 }
 
-                if (e.toString().trim().length() == 0) {
-                    e.append("<" + Constants.Http.TAG_ALL + ">\n\n");
-                    e.append("</" + Constants.Http.TAG_ALL + ">");
+                if (sb.toString().trim().length() == 0) {
+                    sb.append("<" + Constants.Http.TAG_ALL + ">\n\n");
+                    sb.append("</" + Constants.Http.TAG_ALL + ">");
                 }
 
                 int backOffset = Constants.Http.TAG_ALL.length() + 4;
-                e.insert(e.toString().trim().length() - backOffset, "\n<!-- Uncomment for making response \n" + this.data + "\n-->\n");
-                this.xmlTextPane.append(e.toString());
+                sb.insert(sb.toString().trim().length() - backOffset, "\n<!-- Uncomment for making response \n" + this.data + "\n-->\n");
+                this.xmlTextPane.append(sb.toString());
             } catch (FileNotFoundException ex) {
                 LOGGER.severe("XML file not found!!! (" + this.filePath + ")");
             } catch (IOException ex) {
@@ -135,11 +138,11 @@ public class XmlEditor extends JDialog {
 
     private void init() {
         if (this.isEditMode()) {
-            this.getContentPane().add(this.createToolsBarPnl(), "North");
+            this.getContentPane().add(this.createToolsBarPnl(), BorderLayout.NORTH);
         }
 
-        this.getContentPane().add(this.createEditorPnl(), "Center");
-        this.setDefaultCloseOperation(2);
+        this.getContentPane().add(this.createEditorPnl(), BorderLayout.CENTER);
+        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.setIconImage(Img.XML_EDITOR_ICON);
         this.setSize(640, 480);
         this.setResizable(false);
@@ -151,12 +154,12 @@ public class XmlEditor extends JDialog {
         BufferedWriter out = null;
 
         try {
-            File e = new File(this.filePath);
-            if (!e.exists()) {
-                e.createNewFile();
+            File f = new File(this.filePath);
+            if (!f.exists()) {
+                f.createNewFile();
             }
 
-            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(e), "UTF-8"));
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(f), "UTF-8"));
             this.xmlTextPane.getEditor().write(out);
             out.flush();
         } catch (UnsupportedEncodingException ex) {

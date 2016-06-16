@@ -39,6 +39,7 @@ public class Converter extends JDialog {
 
     private Component createMainPnl() {
         JPanel panel = new JPanel();
+
         panel.setLayout(new GridBagLayout());
         JButton btnEnc = new JButton(Constants.Text.BUTTON_ENCODE);
         btnEnc.setFont(Fonts.BTN_ENC_DEC);
@@ -61,12 +62,13 @@ public class Converter extends JDialog {
         this.addComponent(panel, btnEnc, 0, 1, 1, 0, 0, new Insets(5, 5, 2, 10), 22);
         this.addComponent(panel, new JScrollPane(this.taDecStr, 20, 30), -1, 1, 0, 0, 2, new Insets(5, 5, 2, 0), 21);
         this.addComponent(panel, btnDec, 0, 1, 1, 0, 0, new Insets(5, 5, 2, 10), 22);
+
         return panel;
     }
 
     private void init() {
-        this.getContentPane().add(this.createMainPnl(), "Center");
-        this.setDefaultCloseOperation(2);
+        this.getContentPane().add(this.createMainPnl(), BorderLayout.CENTER);
+        this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         this.setIconImage(Img.CONVERTER_ICON);
         this.pack();
         this.setResizable(false);

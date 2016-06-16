@@ -109,18 +109,17 @@ public class HttpRequestHandler implements HttpHandler {
         sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_PROTOCOL, this.he.getProtocol()));
         sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_HEADERS));
         Headers headers = this.he.getRequestHeaders();
-        Iterator a = headers.keySet().iterator();
+        Iterator it = headers.keySet().iterator();
 
         String is;
-        while (a.hasNext()) {
-            is = (String) a.next();
+        while (it.hasNext()) {
+            is = (String) it.next();
             this.messages.getRecv().getHeaders().put(is, this.convertListToString(headers.get(is)));
             sb.append("\n\t\t\t" + this.genElement(is, headers.get(is)));
         }
 
         sb.append("\n\t\t" + this.genElement(Constants.Http.TAG_HEADERS, true));
-        InputStream is1 = this.he.getRequestBody();
-        boolean a1 = false;
+        InputStream isRequestBody = this.he.getRequestBody();
         int maxBytesBufferLength = PropUtil.getMaxBytesBufferLength();
         if (maxBytesBufferLength <= 0) {
             maxBytesBufferLength = Integer.parseInt("1024");
@@ -131,18 +130,18 @@ public class HttpRequestHandler implements HttpHandler {
         byte[] receivedMsg = null;
 
         try {
-            int a2;
+            int ch;
             try {
-                while ((a2 = is1.read(buffer)) >= 0) {
-                    receivedMsg = Arrays.copyOfRange(buffer, 0, a2);
+                while ((ch = isRequestBody.read(buffer)) >= 0) {
+                    receivedMsg = Arrays.copyOfRange(buffer, 0, ch);
                 }
             } catch (IOException ex) {
                 LOGGER.warning("Read request body failed!");
             }
         } finally {
             try {
-                if (is1 != null) {
-                    is1.close();
+                if (isRequestBody != null) {
+                    isRequestBody.close();
                 }
 
                 is = null;
@@ -176,7 +175,7 @@ public class HttpRequestHandler implements HttpHandler {
         time = DateTimeUtil.getTimeNow();
         this.messages.setDetails(sb.toString());
         this.server.addMessages(this.messages);
-        this.server.updateTableExchanges(new Object[]{time, "Recv", this.messages.getRecv().getMethod(), Integer.valueOf(this.messages.getRecv().getContent().getHex().length() / 2), this.messages.getRecv().getContent().getDecompress().length() == 0 ? this.messages.getRecv().getContent().getAscii() : this.messages.getRecv().getContent().getDecompress()});
+        this.server.updateTableExchanges(new Object[]{time, Constants.Http.TAG_RECV, this.messages.getRecv().getMethod(), Integer.valueOf(this.messages.getRecv().getContent().getHex().length() / 2), this.messages.getRecv().getContent().getDecompress().length() == 0 ? this.messages.getRecv().getContent().getAscii() : this.messages.getRecv().getContent().getDecompress()});
         LOGGER.info(sb.toString());
     }
 
@@ -207,22 +206,22 @@ public class HttpRequestHandler implements HttpHandler {
             Iterator responseContentBytes = m.getSend().getHeaders().keySet().iterator();
 
             while (responseContentBytes.hasNext()) {
-                String statusCode = (String) responseContentBytes.next();
-                headers.set(statusCode, m.getSend().getHeaders().get(statusCode));
+                String header = (String) responseContentBytes.next();
+                headers.set(header, m.getSend().getHeaders().get(header));
             }
 
-            int statusCode1 = 200;
+            int statusCode = 200;
 
             try {
-                statusCode1 = Integer.parseInt(m.getSend().getStatusCode());
+                statusCode = Integer.parseInt(m.getSend().getStatusCode());
             } catch (NumberFormatException ex) {
                 LOGGER.warning("(NumberFormatException) HTTP response status code parsing failed!");
             }
 
-            this.he.sendResponseHeaders(statusCode1, (long) responseContentHex.length());
-            byte[] responseContentBytes1 = BHSUtil.hexStringToByteArray(responseContentHex);
+            this.he.sendResponseHeaders(statusCode, (long) responseContentHex.length());
+            byte[] responseContentBytesArray = BHSUtil.hexStringToByteArray(responseContentHex);
             OutputStream os = this.he.getResponseBody();
-            os.write(responseContentBytes1);
+            os.write(responseContentBytesArray);
             os.flush();
             os = null;
             this.he.close();
@@ -242,8 +241,10 @@ public class HttpRequestHandler implements HttpHandler {
     }
 
     class XMLParser extends DefaultHandler {
+
         static final int PARENT_ELEMENT = 2;
         static final int GRAND_PARENT_ELEMENT = 3;
+
         List<Messages> all = new ArrayList();
         Stack<String> elementStack = new Stack();
         Stack<Object> objectStack = new Stack();
@@ -331,11 +332,11 @@ public class HttpRequestHandler implements HttpHandler {
         }
 
         private String currentElementParent() {
-            return this.levelUpCurrentElement(2);
+            return this.levelUpCurrentElement(PARENT_ELEMENT);
         }
 
         private String currentElementGrandParent() {
-            return this.levelUpCurrentElement(3);
+            return this.levelUpCurrentElement(GRAND_PARENT_ELEMENT);
         }
 
         private String levelUpCurrentElement(int level) {

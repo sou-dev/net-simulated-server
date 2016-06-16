@@ -35,23 +35,23 @@ public class XmlTextPane extends JScrollPane {
         this.kit.setAutoIndentation(true);
         this.kit.setTagCompletion(true);
         this.editor.getDocument().putProperty("errorHighlighting", new Boolean(true));
-        this.kit.setStyle("element-name", Colour.ELEMENT_NAME, 0);
-        this.kit.setStyle("element-value", Colour.ELEMENT_VALUE, 1);
-        this.kit.setStyle("attribute-name", Colour.ATTRIBUTE_NAME, 0);
-        this.kit.setStyle("attribute-value", Colour.ATTRIBUTE_VALUE, 1);
-        this.kit.setStyle("Comment", Colour.COMMENT, 2);
-        this.kit.setStyle("CDATA", Colour.CDATA, 1);
+        this.kit.setStyle("element-name", Colour.ELEMENT_NAME, Font.PLAIN);
+        this.kit.setStyle("element-value", Colour.ELEMENT_VALUE, Font.BOLD);
+        this.kit.setStyle("attribute-name", Colour.ATTRIBUTE_NAME, Font.PLAIN);
+        this.kit.setStyle("attribute-value", Colour.ATTRIBUTE_VALUE, Font.BOLD);
+        this.kit.setStyle("Comment", Colour.COMMENT, Font.ITALIC);
+        this.kit.setStyle("CDATA", Colour.CDATA, Font.BOLD);
         ScrollableEditorPanel editorPanel = new ScrollableEditorPanel(this.editor);
         this.setViewportView(editorPanel);
         JPanel rowHeader = new JPanel(new BorderLayout());
 
         try {
-            rowHeader.add(new XMLFoldingMargin(this.editor), "East");
+            rowHeader.add(new XMLFoldingMargin(this.editor), BorderLayout.EAST);
         } catch (IOException ex) {
             System.out.println("(IOException) XMLTextPane rowHeader add XMLFoldingMargin failed!");
         }
 
-        rowHeader.add(new LineNumberMargin(this.editor), "West");
+        rowHeader.add(new LineNumberMargin(this.editor), BorderLayout.WEST);
         this.setRowHeaderView(rowHeader);
     }
 

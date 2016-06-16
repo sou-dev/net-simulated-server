@@ -67,14 +67,14 @@ public class GZipUtil {
                 gzis = new GZIPInputStream(new ByteArrayInputStream(BHSUtil.hexStringToByteArray(cstr)));
                 reader = new InputStreamReader(gzis);
                 in = new BufferedReader(reader);
-                StringBuffer e = new StringBuffer();
+                StringBuffer sb = new StringBuffer();
                 String tmp = null;
 
                 while ((tmp = in.readLine()) != null) {
-                    e.append(tmp + "\n");
+                    sb.append(tmp + "\n");
                 }
 
-                result = e.toString().trim();
+                result = sb.toString().trim();
             } catch (IOException ex) {
                 System.out.println("(IOException) Decompress (method: gzip) the string failed!");
             } finally {

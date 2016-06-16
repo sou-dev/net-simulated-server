@@ -223,6 +223,7 @@ public class NETSimulatedServer extends JFrame {
     private Component createMainPnl() {
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
+
         this.btnStart = new JButton();
         this.btnStart.setIcon(Img.START_ICON);
         this.btnStart.setBorder(BorderFactory.createBevelBorder(0));
@@ -234,7 +235,7 @@ public class NETSimulatedServer extends JFrame {
         this.btnStop.addActionListener(this.listener);
         this.tfStatus = new JTextField(Text.TXT_READY, 48);
         this.tfStatus.setBorder(BorderFactory.createEtchedBorder(1));
-        this.tfStatus.setHorizontalAlignment(0);
+        this.tfStatus.setHorizontalAlignment(JTextField.CENTER);
         this.tfStatus.setFont(Fonts.TF_STATUS);
         this.tfStatus.setBackground(Colour.TF_STATUS_READY);
         this.tfStatus.setEditable(false);
@@ -264,7 +265,7 @@ public class NETSimulatedServer extends JFrame {
             }
         }
 
-        this.tblExchanges.setSelectionMode(0);
+        this.tblExchanges.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         this.tblExchanges.setAutoCreateRowSorter(true);
         this.tblExchanges.addMouseListener(this.listener);
         this.tpConsole = new JTextPane();
@@ -273,7 +274,7 @@ public class NETSimulatedServer extends JFrame {
         this.tpConsole.setBackground(Colour.TP_CONSOLE_BG);
         this.tpConsole.setEditable(false);
         this.tpConsole.addMouseListener(this.listener);
-        JSplitPane spConsole = new JSplitPane(0, new JScrollPane(this.tblExchanges, 20, 31), new JScrollPane(this.tpConsole, 20, 30));
+        JSplitPane spConsole = new JSplitPane(JSplitPane.VERTICAL_SPLIT, new JScrollPane(this.tblExchanges, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER), new JScrollPane(this.tpConsole, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED));
         spConsole.setOneTouchExpandable(true);
         spConsole.setDividerSize(20);
         spConsole.setDividerLocation(200);
@@ -281,13 +282,14 @@ public class NETSimulatedServer extends JFrame {
         this.addComponent(panel, this.btnStop, 1, 1, 0, 0, 0, new Insets(5, 0, 10, 3), 21);
         this.addComponent(panel, this.tfStatus, 0, 1, 1, 0, 2, new Insets(6, 0, 10, 3), 22);
         this.addComponent(panel, spConsole, 0, 1, 1, 1, 1, new Insets(0, 0, 0, 0), 21);
+
         return panel;
     }
 
     private void init() {
         this.setJMenuBar((JMenuBar) this.createMenuBar());
-        this.getContentPane().add(this.createMainPnl(), "Center");
-        this.setDefaultCloseOperation(3);
+        this.getContentPane().add(this.createMainPnl(), BorderLayout.CENTER);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setTitle(Text.APP_NAME + " " + Text.APP_VERSION);
         this.setIconImage(Img.APP_ICON);
         this.setSize(Toolkit.getDefaultToolkit().getScreenSize().width * 2 / 3, Toolkit.getDefaultToolkit().getScreenSize().height * 2 / 3);
@@ -359,8 +361,8 @@ public class NETSimulatedServer extends JFrame {
             context_path = "";
 
             try {
-                File e = new File(page);
-                String uri = e.toURI().toString();
+                File f = new File(page);
+                String uri = f.toURI().toString();
                 context_path = uri.substring(6 + this.pages_folder.getAbsolutePath().length(), uri.length());
                 this.hmapAllPages.put(context_path, page);
             } catch (NullPointerException e) {
@@ -394,9 +396,9 @@ public class NETSimulatedServer extends JFrame {
         String errStr = "";
 
         try {
-            int e = PropUtil.getDefaultPort();
-            if (e <= 0 || e > 65535) {
-                e = Integer.parseInt("21288");
+            int port = PropUtil.getDefaultPort();
+            if (port <= 0 || port > 65535) {
+                port = Integer.parseInt("21288");
                 System.out.println("Port number is out of range [1...65535]!\nSet port number to default: 21288");
             }
 
@@ -406,7 +408,7 @@ public class NETSimulatedServer extends JFrame {
                 System.out.println("Size of connections queue is out of range [0...10000]!\nSet queue of connections to default: 10");
             }
 
-            this.httpServer = HttpServer.create(new InetSocketAddress(e), queueOfConnections);
+            this.httpServer = HttpServer.create(new InetSocketAddress(port), queueOfConnections);
             String[] pagesFolderPath = Data.PAGES_FOLDER_PATH;
 
             for (int i = 0; i < pagesFolderPath.length; ++i) {
@@ -425,14 +427,14 @@ public class NETSimulatedServer extends JFrame {
             this.setStarted(true);
             this.setEffect();
             (new NETSimulatedServer.PagesInspector()).start();
-            System.out.println("HttpServer started successful (port: " + e + ")");
+            System.out.println("HttpServer started successful (port: " + port + ")");
         } catch (IOException e) {
             this.setStarted(false);
             errStr = e.toString();
             LOGGER.severe("HttpServer start failed!!!");
         } finally {
             if (!this.isStarted()) {
-                JOptionPane.showMessageDialog(this, "HttpServer started failed!\nReason:\n" + errStr, "ERROR", 0);
+                JOptionPane.showMessageDialog(this, "HttpServer started failed!\nReason:\n" + errStr, "ERROR", JOptionPane.ERROR_MESSAGE);
                 if (this.httpServer != null) {
                     this.httpServer.stop(0);
                     this.httpServer = null;
@@ -491,7 +493,7 @@ public class NETSimulatedServer extends JFrame {
             tcm.addColumn(this.tcMethod);
 
             try {
-                tcm.moveColumn(tcm.getColumnCount() - 1, 2);
+                tcm.moveColumn(tcm.getColumnCount() - 1, COLUMN_METHOD);
             } catch (IllegalArgumentException e) {
                 System.out.println("Show column \'METHOD\' failed!");
             }
@@ -503,7 +505,7 @@ public class NETSimulatedServer extends JFrame {
         TableColumnModel tcm = this.tblExchanges.getColumnModel();
 
         try {
-            this.tcMethod = tcm.getColumn(2);
+            this.tcMethod = tcm.getColumn(COLUMN_METHOD);
         } catch (ArrayIndexOutOfBoundsException e) {
             System.out.println("Hide column \'METHOD\' failed!");
         }
@@ -556,13 +558,13 @@ public class NETSimulatedServer extends JFrame {
 
             boolean selectedRowIdx;
             if (ACTION_COMMAND_HTTP.equals(e.getActionCommand())) {
-                if (NETSimulatedServer.this.getServerMode() == 5) {
+                if (HTTP_MODE == NETSimulatedServer.this.getServerMode()) {
                     return;
                 }
 
                 selectedRowIdx = NETSimulatedServer.this.isStarted();
                 NETSimulatedServer.this.stopServer();
-                NETSimulatedServer.this.setServerMode(5);
+                NETSimulatedServer.this.setServerMode(HTTP_MODE);
                 if (selectedRowIdx) {
                     NETSimulatedServer.this.startServer();
                 }
@@ -592,12 +594,12 @@ public class NETSimulatedServer extends JFrame {
             }
 
             if (ACTION_COMMAND_ABOUT.equals(e.getActionCommand())) {
-                JOptionPane.showMessageDialog(NETSimulatedServer.this, Text.APP_NAME + "\n" + Text.APP_VERSION + " [" + Text.APP_RELEASE + "]\n" + Text.APP_DESCRIPTION, "About", 1, new ImageIcon(Img.APP_ICON));
+                JOptionPane.showMessageDialog(NETSimulatedServer.this, Text.APP_NAME + "\n" + Text.APP_VERSION + " [" + Text.APP_RELEASE + "]\n" + Text.APP_DESCRIPTION, "About", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(Img.APP_ICON));
             }
 
             if (ACTION_COMMAND_MAKE_RESPONSE.equals(e.getActionCommand())) {
                 int selectedRowIdx1 = NETSimulatedServer.this.tblExchanges.convertRowIndexToModel(NETSimulatedServer.this.tblExchanges.getSelectedRow());
-                String title = "[Make response] Type: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx1, 1).toString() + " | " + "Method: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx1, 2).toString() + " | " + "Content-length: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx1, 3).toString() + " | ";
+                String title = "[Make response] Type: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx1, COLUMN_TYPE).toString() + " | " + "Method: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx1, COLUMN_METHOD).toString() + " | " + "Content-length: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx1, COLUMN_SIZE).toString() + " | ";
                 String contextPath = NETSimulatedServer.this.getHttpMessages(selectedRowIdx1).getRecv().getContextPath();
                 if (contextPath.endsWith("/")) {
                     contextPath = contextPath.concat(PropUtil.getDefaultDocument());
@@ -618,9 +620,9 @@ public class NETSimulatedServer extends JFrame {
         }
 
         public void mousePressed(MouseEvent e) {
-            if (e.getSource() instanceof JTable && e.getClickCount() == 2) {
+            if (e.getSource() instanceof JTable && 2 == e.getClickCount()) {
                 int selectedRowIdx = NETSimulatedServer.this.tblExchanges.convertRowIndexToModel(NETSimulatedServer.this.tblExchanges.getSelectedRow());
-                String title = "[" + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, 0).toString() + "] " + "Type: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, 1).toString() + " | " + "Method: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, 2).toString() + " | " + "Content-length: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, 3).toString() + " | ";
+                String title = "[" + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, COLUMN_TIME).toString() + "] " + "Type: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, COLUMN_TYPE).toString() + " | " + "Method: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, COLUMN_METHOD).toString() + " | " + "Content-length: " + NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, COLUMN_SIZE).toString() + " | ";
                 String data = NETSimulatedServer.this.getHttpMessagesDetails(selectedRowIdx).trim();
                 new XmlEditor(NETSimulatedServer.this, title, data);
             }
@@ -633,8 +635,8 @@ public class NETSimulatedServer extends JFrame {
                     int rowAtPoint = NETSimulatedServer.this.tblExchanges.rowAtPoint(e.getPoint());
                     NETSimulatedServer.this.tblExchanges.setRowSelectionInterval(0, rowAtPoint);
                     int selectedRowIdx = NETSimulatedServer.this.tblExchanges.convertRowIndexToModel(rowAtPoint);
-                    String type = NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, 1).toString();
-                    if (type.equalsIgnoreCase("Recv")) {
+                    String type = NETSimulatedServer.this.tblExchangesModel.getValueAt(selectedRowIdx, COLUMN_TYPE).toString();
+                    if (Http.TAG_RECV.equalsIgnoreCase(type)) {
                         ((JPopupMenu) NETSimulatedServer.this.createTablePopupMenu()).show(e.getComponent(), e.getX(), e.getY());
                     }
                 }
@@ -700,7 +702,7 @@ public class NETSimulatedServer extends JFrame {
                 NETSimulatedServer.this.serverSocket = new ServerSocket(portNumber, queueOfConnections);
             } catch (IOException e) {
                 NETSimulatedServer.this.setStarted(false);
-                JOptionPane.showMessageDialog(NETSimulatedServer.this, "ServerSocket started failed!\nReason:\n" + e.toString(), "ERROR", 0);
+                JOptionPane.showMessageDialog(NETSimulatedServer.this, "ServerSocket started failed!\nReason:\n" + e.toString(), "ERROR", JOptionPane.ERROR_MESSAGE);
                 if (NETSimulatedServer.this.serverSocket != null) {
                     try {
                         NETSimulatedServer.this.serverSocket.close();
@@ -714,15 +716,15 @@ public class NETSimulatedServer extends JFrame {
             }
 
             try {
-                int e = PropUtil.getServerSocketTimeout();
-                if (e < 0) {
-                    e = 0;
+                int serverSocketTimeout = PropUtil.getServerSocketTimeout();
+                if (serverSocketTimeout < 0) {
+                    serverSocketTimeout = 0;
                 }
 
-                NETSimulatedServer.this.serverSocket.setSoTimeout(e);
+                NETSimulatedServer.this.serverSocket.setSoTimeout(serverSocketTimeout);
                 NETSimulatedServer.this.setStarted(true);
                 NETSimulatedServer.this.setEffect();
-                System.out.println("ServerSocket started successful (port: " + portNumber + (e > 0 ? "; timeout: " + e + "ms" : "") + ")");
+                System.out.println("ServerSocket started successful (port: " + portNumber + (serverSocketTimeout > 0 ? "; timeout: " + serverSocketTimeout + "ms" : "") + ")");
                 NETSimulatedServer.this.vClients = new Vector();
 
                 while (NETSimulatedServer.this.isStarted()) {
@@ -740,8 +742,8 @@ public class NETSimulatedServer extends JFrame {
 
                     if (clientSocket != null) {
                         NETSimulatedServer.this.vClients.add(clientSocket);
-                        SocketRequestHandler e1 = new SocketRequestHandler(NETSimulatedServer.this, clientSocket);
-                        e1.start();
+                        SocketRequestHandler socketRequestHandler = new SocketRequestHandler(NETSimulatedServer.this, clientSocket);
+                        socketRequestHandler.start();
                     }
 
                     System.gc();

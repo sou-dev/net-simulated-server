@@ -22,11 +22,11 @@ public class DateTimeUtil {
     }
 
     public static String getTimeNow() {
-        return getTimeString(System.currentTimeMillis(), "yyyy-MM-dd HH:mm:ss");
+        return getTimeString(System.currentTimeMillis(), DATE_TIME_DEFAULT_FORMAT);
     }
 
     public static String getTimeNow4LogFolderName() {
-        return getTimeString(System.currentTimeMillis(), "yyyyMMdd_HHmmss");
+        return getTimeString(System.currentTimeMillis(), LOG_FOLDER_NAME_FORMAT);
     }
 
     public static String getTimeString(Date date, String pattern) {

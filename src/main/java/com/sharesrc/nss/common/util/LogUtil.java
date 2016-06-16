@@ -41,7 +41,7 @@ public class LogUtil {
     public Logger getLogger(String loggerName) {
         try {
             if (!this.mapLogger.containsKey(loggerName)) {
-                Logger e = Logger.getLogger(loggerName);
+                Logger logger = Logger.getLogger(loggerName);
                 File f = new File(this.logFolder);
                 if (!f.exists()) {
                     f.mkdirs();
@@ -49,9 +49,9 @@ public class LogUtil {
 
                 FileHandler handler = new FileHandler(this.logFolder + File.separator + loggerName.substring(loggerName.lastIndexOf(".") + 1) + Logging.LOG_FILE_EXT, true);
                 handler.setFormatter(new SimpleFormatter());
-                e.setLevel(PropUtil.getLogAll() ? Level.ALL : Level.WARNING);
-                e.addHandler(handler);
-                this.mapLogger.put(loggerName, e);
+                logger.setLevel(PropUtil.getLogAll() ? Level.ALL : Level.WARNING);
+                logger.addHandler(handler);
+                this.mapLogger.put(loggerName, logger);
             }
         } catch (SecurityException ex) {
             System.out.println("(SecurityException) Setup logging failed!!!");
